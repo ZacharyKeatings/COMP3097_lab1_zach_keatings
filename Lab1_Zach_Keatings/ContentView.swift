@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var showAlert = false
     @State private var timeLeft = 5
     @State private var timer: Timer?
+    @State private var animateNumber = false 
 
     func isPrime(_ n: Int) -> Bool {
         if n < 2 { return false }
@@ -25,7 +26,7 @@ struct ContentView: View {
     }
 
     func checkAnswer(isPrimeSelected: Bool) {
-        guard !showAlert else { return }  
+        guard !showAlert else { return }
 
         let correct = isPrime(number) == isPrimeSelected
         if correct {
@@ -38,18 +39,26 @@ struct ContentView: View {
         if attempts >= 10 {
             endGame()
         } else {
-            generateNewNumber()
+            animateNumber = false  
+            withAnimation(.easeInOut(duration: 0.5)) {
+                generateNewNumber()
+            }
             resetTimer()
         }
     }
 
     func generateNewNumber() {
-        number = Int.random(in: 1...100)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            number = Int.random(in: 1...100)
+            withAnimation(.spring()) { 
+                animateNumber = true
+            }
+        }
         timeLeft = 5
     }
 
     func autoFail() {
-        guard !showAlert else { return } 
+        guard !showAlert else { return }
 
         wrongAnswers += 1
         attempts += 1
@@ -57,7 +66,10 @@ struct ContentView: View {
         if attempts >= 10 {
             endGame()
         } else {
-            generateNewNumber()
+            animateNumber = false
+            withAnimation(.easeInOut(duration: 0.5)) { 
+                generateNewNumber()
+            }
             resetTimer()
         }
     }
@@ -99,6 +111,9 @@ struct ContentView: View {
             Text("\(number)")
                 .font(.system(size: 60, weight: .bold, design: .rounded))
                 .padding()
+                .scaleEffect(animateNumber ? 1.2 : 1.0)
+                .opacity(animateNumber ? 1 : 0)
+                .animation(.spring(), value: animateNumber)
 
             Text("Time left: \(timeLeft)s")
                 .font(.title)
