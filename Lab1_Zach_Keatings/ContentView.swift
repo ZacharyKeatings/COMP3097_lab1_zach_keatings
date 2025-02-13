@@ -46,6 +46,16 @@ struct ContentView: View {
         timeLeft = 5
     }
 
+    func autoFail() {
+        wrongAnswers += 1
+        attempts += 1
+        if attempts >= 10 {
+            showAlert = true
+        } else {
+            generateNewNumber()
+        }
+    }
+
     func resetGame() {
         correctAnswers = 0
         wrongAnswers = 0
@@ -61,12 +71,7 @@ struct ContentView: View {
             if self.timeLeft > 0 {
                 self.timeLeft -= 1
             } else {
-                self.wrongAnswers += 1
-                self.attempts += 1
-                if self.attempts >= 10 {
-                    self.showAlert = true
-                }
-                self.generateNewNumber()
+                self.autoFail()
             }
         }
     }
