@@ -90,20 +90,31 @@ struct ContentView: View {
             Text("Time left: \(timeLeft)s")
                 .font(.headline)
                 .foregroundColor(timeLeft <= 2 ? .red : .black)
+                .padding()
+                .animation(.easeInOut, value: timeLeft)
 
             HStack {
                 Button("Prime") {
                     checkAnswer(isPrimeSelected: true)
                 }
                 .padding()
+                .frame(width: 120, height: 50)
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(10)
 
                 Button("Not Prime") {
                     checkAnswer(isPrimeSelected: false)
                 }
                 .padding()
+                .frame(width: 120, height: 50)
+                .background(Color.red)
+                .foregroundColor(.white)
+                .cornerRadius(10)
             }
 
-            Text("Correct: \(correctAnswers)  Wrong: \(wrongAnswers)")
+            Text("Correct: \(correctAnswers)  |  Wrong: \(wrongAnswers)")
+                .font(.headline)
                 .padding()
         }
         .onAppear { startTimer() }
