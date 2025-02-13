@@ -25,6 +25,8 @@ struct ContentView: View {
     }
 
     func checkAnswer(isPrimeSelected: Bool) {
+        guard !showAlert else { return }  
+
         let correct = isPrime(number) == isPrimeSelected
         if correct {
             correctAnswers += 1
@@ -32,13 +34,12 @@ struct ContentView: View {
             wrongAnswers += 1
         }
         attempts += 1
-        
+
         if attempts >= 10 {
-            showAlert = true
-            timer?.invalidate()  
+            endGame()
         } else {
             generateNewNumber()
-            resetTimer()  
+            resetTimer()
         }
     }
 
@@ -48,16 +49,22 @@ struct ContentView: View {
     }
 
     func autoFail() {
+        guard !showAlert else { return } 
+
         wrongAnswers += 1
         attempts += 1
-        
+
         if attempts >= 10 {
-            showAlert = true
-            timer?.invalidate() 
+            endGame()
         } else {
             generateNewNumber()
-            resetTimer()  
+            resetTimer()
         }
+    }
+
+    func endGame() {
+        showAlert = true
+        timer?.invalidate()
     }
 
     func resetGame() {
@@ -65,6 +72,7 @@ struct ContentView: View {
         wrongAnswers = 0
         attempts = 0
         timeLeft = 5
+        showAlert = false
         generateNewNumber()
         startTimer()
     }
