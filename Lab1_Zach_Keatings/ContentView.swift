@@ -10,11 +10,20 @@ import SwiftUI
 struct ContentView: View {
     @State private var number: Int = Int.random(in: 1...100)
 
+    func generateNewNumber() {
+        number = Int.random(in: 1...100)
+    }
+
     var body: some View {
         VStack {
             Text("\(number)")
                 .font(.largeTitle)
                 .padding()
+
+            Button("New Number") {
+                generateNewNumber()
+            }
+            .padding()
         }
     }
 }
@@ -24,4 +33,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
