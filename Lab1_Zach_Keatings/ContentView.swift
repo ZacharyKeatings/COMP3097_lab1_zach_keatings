@@ -9,13 +9,25 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var number: Int = Int.random(in: 1...100)
-
+    @State private var correctAnswers = 0
+    @State private var wrongAnswers = 0
+    
     func isPrime(_ n: Int) -> Bool {
         if n < 2 { return false }
         for i in 2..<n {
             if n % i == 0 { return false }
         }
         return true
+    }
+
+    func checkAnswer(isPrimeSelected: Bool) {
+        let correct = isPrime(number) == isPrimeSelected
+        if correct {
+            correctAnswers += 1
+        } else {
+            wrongAnswers += 1
+        }
+        generateNewNumber()
     }
 
     func generateNewNumber() {
@@ -30,17 +42,18 @@ struct ContentView: View {
 
             HStack {
                 Button("Prime") {
-                    print(isPrime(number) ? "Right!" : "Wrong!")
-                    generateNewNumber()
+                    checkAnswer(isPrimeSelected: true)
                 }
                 .padding()
 
                 Button("Not Prime") {
-                    print(!isPrime(number) ? "Right!" : "Wrong!")
-                    generateNewNumber()
+                    checkAnswer(isPrimeSelected: false)
                 }
                 .padding()
             }
+
+            Text("Correct: \(correctAnswers)  Wrong: \(wrongAnswers)")
+                .padding()
         }
     }
 }
@@ -50,4 +63,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 
