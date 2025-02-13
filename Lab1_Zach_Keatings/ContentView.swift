@@ -13,6 +13,8 @@ struct ContentView: View {
     @State private var wrongAnswers = 0
     @State private var attempts = 0
     @State private var showAlert = false
+    @State private var timeLeft = 5
+    @State private var timer: Timer?
 
     func isPrime(_ n: Int) -> Bool {
         if n < 2 { return false }
@@ -30,6 +32,8 @@ struct ContentView: View {
             wrongAnswers += 1
         }
         attempts += 1
+        resetTimer()
+        
         if attempts >= 10 {
             showAlert = true
         } else {
@@ -39,13 +43,37 @@ struct ContentView: View {
 
     func generateNewNumber() {
         number = Int.random(in: 1...100)
+        timeLeft = 5
     }
 
     func resetGame() {
         correctAnswers = 0
         wrongAnswers = 0
         attempts = 0
+        timeLeft = 5
         generateNewNumber()
+        startTimer()
+    }
+
+    func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.timeLeft > 0 {
+                self.timeLeft -= 1
+            } else {
+                self.wrongAnswers += 1
+                self.attempts += 1
+                if self.attempts >= 10 {
+                    self.showAlert = true
+                }
+                self.generateNewNumber()
+            }
+        }
+    }
+
+    func resetTimer() {
+        timer?.invalidate()
+        startTimer()
     }
 
     var body: some View {
@@ -53,6 +81,10 @@ struct ContentView: View {
             Text("\(number)")
                 .font(.largeTitle)
                 .padding()
+
+            Text("Time left: \(timeLeft)s")
+                .font(.headline)
+                .foregroundColor(timeLeft <= 2 ? .red : .black)
 
             HStack {
                 Button("Prime") {
@@ -69,6 +101,7 @@ struct ContentView: View {
             Text("Correct: \(correctAnswers)  Wrong: \(wrongAnswers)")
                 .padding()
         }
+        .onAppear { startTimer() }
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text("Game Over"),
