@@ -10,6 +10,14 @@ import SwiftUI
 struct ContentView: View {
     @State private var number: Int = Int.random(in: 1...100)
 
+    func isPrime(_ n: Int) -> Bool {
+        if n < 2 { return false }
+        for i in 2..<n {
+            if n % i == 0 { return false }
+        }
+        return true
+    }
+
     func generateNewNumber() {
         number = Int.random(in: 1...100)
     }
@@ -22,11 +30,13 @@ struct ContentView: View {
 
             HStack {
                 Button("Prime") {
+                    print(isPrime(number) ? "Right!" : "Wrong!")
                     generateNewNumber()
                 }
                 .padding()
 
                 Button("Not Prime") {
+                    print(!isPrime(number) ? "Right!" : "Wrong!")
                     generateNewNumber()
                 }
                 .padding()
