@@ -85,8 +85,12 @@ struct ContentView: View {
         attempts = 0
         timeLeft = 5
         showAlert = false
-        generateNewNumber()
-        startTimer()
+        animateNumber = false
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            generateNewNumber()
+            startTimer()
+        }
     }
 
     func startTimer() {
