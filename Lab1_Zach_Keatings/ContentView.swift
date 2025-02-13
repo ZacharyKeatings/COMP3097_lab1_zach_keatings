@@ -18,19 +18,18 @@ struct ContentView: View {
     @State private var timer: Timer?
     @State private var animateNumber = false 
 
+    // Prime number checker
     func isPrime(_ n: Int) -> Bool {
         if n < 2 { return false }
-        for i in 2..<n {
-            if n % i == 0 { return false }
-        }
+        for i in 2..<n where n % i == 0 { return false }
         return true
     }
 
+    // Handle answer selection
     func checkAnswer(isPrimeSelected: Bool) {
         guard !showAlert else { return }
 
-        let correct = isPrime(number) == isPrimeSelected
-        if correct {
+        if isPrime(number) == isPrimeSelected {
             correctAnswers += 1
         } else {
             wrongAnswers += 1
@@ -40,31 +39,28 @@ struct ContentView: View {
         if attempts >= 10 {
             endGame()
         } else {
-            animateNumber = false  
-            withAnimation(.easeInOut(duration: 0.5)) {
-                generateNewNumber()
-            }
+            generateNewNumber()
             resetTimer()
         }
     }
 
+    // Generate a new number while ensuring no consecutive repeats
     func generateNewNumber() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            var newNumber: Int
-            repeat {
-                newNumber = Int.random(in: 2...100)
-            } while newNumber == previousNumber 
-            
-            previousNumber = newNumber
-            number = newNumber
-
-            withAnimation(.spring()) { 
-                animateNumber = true
-            }
-        }
+        var newNumber: Int
+        repeat {
+            newNumber = Int.random(in: 2...100)
+        } while newNumber == previousNumber
+        
+        previousNumber = newNumber
+        number = newNumber
         timeLeft = 5
+
+        withAnimation(.spring()) { 
+            animateNumber = true
+        }
     }
 
+    // Handle automatic failure due to timeout
     func autoFail() {
         guard !showAlert else { return }
 
@@ -74,33 +70,29 @@ struct ContentView: View {
         if attempts >= 10 {
             endGame()
         } else {
-            animateNumber = false
-            withAnimation(.easeInOut(duration: 0.5)) { 
-                generateNewNumber()
-            }
+            generateNewNumber()
             resetTimer()
         }
     }
 
+    // End the game and show the alert
     func endGame() {
         showAlert = true
         timer?.invalidate()
     }
 
+    // Reset game state and restart
     func resetGame() {
         correctAnswers = 0
         wrongAnswers = 0
         attempts = 0
         timeLeft = 5
         showAlert = false
-        animateNumber = false
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            generateNewNumber()
-            startTimer()
-        }
+        generateNewNumber()
+        startTimer()
     }
 
+    // Start or restart the timer
     func startTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
@@ -112,6 +104,7 @@ struct ContentView: View {
         }
     }
 
+    // Reset timer without duplicating it
     func resetTimer() {
         timer?.invalidate()
         timeLeft = 5
@@ -120,6 +113,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
+            // Display the current number with animation
             Text("\(number)")
                 .font(.system(size: 60, weight: .bold, design: .rounded))
                 .padding()
@@ -127,12 +121,14 @@ struct ContentView: View {
                 .opacity(animateNumber ? 1 : 0)
                 .animation(.spring(), value: animateNumber)
 
+            // Timer display
             Text("Time left: \(timeLeft)s")
                 .font(.title)
                 .foregroundColor(timeLeft <= 2 ? .red : .black)
                 .padding()
                 .animation(.easeInOut, value: timeLeft)
 
+            // Buttons for prime/not prime choices
             HStack(spacing: 40) {
                 Button(action: { checkAnswer(isPrimeSelected: true) }) {
                     Text("Prime")
@@ -156,6 +152,7 @@ struct ContentView: View {
             }
             .padding(.top, 20)
 
+            // Score display
             Text("Correct: \(correctAnswers)  |  Wrong: \(wrongAnswers)")
                 .font(.title3)
                 .padding(.top, 30)
