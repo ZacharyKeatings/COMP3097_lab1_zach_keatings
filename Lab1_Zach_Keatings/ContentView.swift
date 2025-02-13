@@ -32,12 +32,13 @@ struct ContentView: View {
             wrongAnswers += 1
         }
         attempts += 1
-        resetTimer()
         
         if attempts >= 10 {
             showAlert = true
+            timer?.invalidate()  
         } else {
             generateNewNumber()
+            resetTimer()  
         }
     }
 
@@ -49,10 +50,13 @@ struct ContentView: View {
     func autoFail() {
         wrongAnswers += 1
         attempts += 1
+        
         if attempts >= 10 {
             showAlert = true
+            timer?.invalidate() 
         } else {
             generateNewNumber()
+            resetTimer()  
         }
     }
 
@@ -78,6 +82,7 @@ struct ContentView: View {
 
     func resetTimer() {
         timer?.invalidate()
+        timeLeft = 5
         startTimer()
     }
 
