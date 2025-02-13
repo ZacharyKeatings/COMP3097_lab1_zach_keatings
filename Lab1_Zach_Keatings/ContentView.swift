@@ -97,38 +97,41 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("\(number)")
-                .font(.largeTitle)
+                .font(.system(size: 60, weight: .bold, design: .rounded))
                 .padding()
 
             Text("Time left: \(timeLeft)s")
-                .font(.headline)
+                .font(.title)
                 .foregroundColor(timeLeft <= 2 ? .red : .black)
                 .padding()
                 .animation(.easeInOut, value: timeLeft)
 
-            HStack {
-                Button("Prime") {
-                    checkAnswer(isPrimeSelected: true)
+            HStack(spacing: 40) {
+                Button(action: { checkAnswer(isPrimeSelected: true) }) {
+                    Text("Prime")
+                        .font(.title2)
+                        .frame(width: 150, height: 60)
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                        .shadow(radius: 5)
                 }
-                .padding()
-                .frame(width: 120, height: 50)
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
 
-                Button("Not Prime") {
-                    checkAnswer(isPrimeSelected: false)
+                Button(action: { checkAnswer(isPrimeSelected: false) }) {
+                    Text("Not Prime")
+                        .font(.title2)
+                        .frame(width: 150, height: 60)
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                        .shadow(radius: 5)
                 }
-                .padding()
-                .frame(width: 120, height: 50)
-                .background(Color.red)
-                .foregroundColor(.white)
-                .cornerRadius(10)
             }
+            .padding(.top, 20)
 
             Text("Correct: \(correctAnswers)  |  Wrong: \(wrongAnswers)")
-                .font(.headline)
-                .padding()
+                .font(.title3)
+                .padding(.top, 30)
         }
         .onAppear { startTimer() }
         .alert(isPresented: $showAlert) {
