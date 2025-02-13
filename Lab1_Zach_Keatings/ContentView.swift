@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var number: Int = Int.random(in: 2...100)
+    @State private var previousNumber: Int = 0
     @State private var correctAnswers = 0
     @State private var wrongAnswers = 0
     @State private var attempts = 0
@@ -49,7 +50,14 @@ struct ContentView: View {
 
     func generateNewNumber() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            number = Int.random(in: 2...100)
+            var newNumber: Int
+            repeat {
+                newNumber = Int.random(in: 2...100)
+            } while newNumber == previousNumber 
+            
+            previousNumber = newNumber
+            number = newNumber
+
             withAnimation(.spring()) { 
                 animateNumber = true
             }
