@@ -20,10 +20,17 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .padding()
 
-            Button("New Number") {
-                generateNewNumber()
+            HStack {
+                Button("Prime") {
+                    generateNewNumber()
+                }
+                .padding()
+
+                Button("Not Prime") {
+                    generateNewNumber()
+                }
+                .padding()
             }
-            .padding()
         }
     }
 }
@@ -33,3 +40,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
